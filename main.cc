@@ -83,12 +83,14 @@ void System::update(){
 }
 
 std::vector<sf::CircleShape> System::getCircles(){
-
+	std::mt19937_64 c;
+	c.seed(6);
+	std::uniform_int_distribution<int> dist(0, 255);
 	std::vector<sf::CircleShape> circles;
 	for (const auto& i : points){
-		sf::CircleShape circle(i.mass * 5); //изменение размеров объектов
-		circle.setFillColor(sf::Color::White);
-		circle.setPosition(i.x - i.mass * 5, i.y - i.mass * 5); //центрирование объектов
+		sf::CircleShape circle(i.mass * 3); //изменение размеров объектов
+		circle.setFillColor(sf::Color(dist(c), dist(c), dist(c)));
+		circle.setPosition(i.x - i.mass * 10, i.y - i.mass * 2); //центрирование объектов
 		circles.push_back(circle);
 	}
 	return circles;
@@ -104,10 +106,10 @@ int main()
 	size_t steps = 1000;
 	System s(1.0 / 60.0 / steps / 0.1); //изменение tраектории объектов
 
-	size_t ipcount = 10;
+	size_t ipcount = 20;
 	double da = 2.0 * acos(-1.0) / ipcount;
 	double r = 150.0, angle = 0.0;
-	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window");
+	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window"/*, sf::Style::Fullscreen*/);
 	window.setFramerateLimit(60);
 	for (size_t i = 0; i < ipcount; ++i){
 
