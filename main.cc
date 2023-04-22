@@ -34,6 +34,7 @@ real System::acceleration(const Point& p, const std::vector<Point>& pnts, bool x
 
 	real a = 0.0;
 	for (const auto& i : pnts){
+
 		real dv = xy ? p.x - i.x : p.y - i.y;
 		if (fabs(dv) > std::numeric_limits<real>::epsilon()){
 
@@ -65,6 +66,7 @@ void System::init(){
 }
 
 void System::update(){
+
 	std::vector<Point> new_system;
 	for (const auto& i : points){
 
@@ -101,24 +103,24 @@ void System::update(){
 	points = new_system;
 	++counter;
 }
-//круг
 std::vector<sf::CircleShape> System::getCircles(){
+
 	std::mt19937_64 c;
 	c.seed(6);
 	std::uniform_int_distribution<int> dist(0, 255);
 	std::vector<sf::CircleShape> circles;
 	for (const auto& i : points){
+
 		sf::CircleShape circle(i.mass * 2); //изменение размеров объектов
 		circle.setFillColor(sf::Color(dist(c), dist(c), dist(c)));
 	
 		circle.setPosition(i.x - i.mass * 10, i.y - i.mass * 1); //центрирование объектов
-		//circle.setPosition(125 + i.x - i.mass * 10 - dist(c), 125 + i.y - i.mass * 2 - dist(c));
 		circles.push_back(circle);
 	}
 	return circles;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
 	std::mt19937_64 g;
 	g.seed(6);
@@ -128,23 +130,32 @@ int main()
 
 	System s(1.0 / 60.0 / steps / 0.1); //изменение tраектории объектов
 
-	size_t ipcount = 20;
+	size_t ipcount = atoi(argv[2]);
 	double da = 2.0 * acos(-1.0) / ipcount;
 	double r = 250.0, angle = 0.0;
+
 	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window"/*, sf::Style::Fullscreen*/);
 	window.setFramerateLimit(60);
-	int q=0;
-	if (q == 0) {
+	if (strcmp(argv[1], "Circle") == 0) {
+
 		for (size_t i = 0; i < ipcount; ++i) {
+
 			s.push(Point(0.5 * (dist(g) % 10)+1, window.getSize().x / 2.0 + r * cos(angle) + dr(g), window.getSize().y / 2.0 + r * sin(angle) + dr(g), 1.25 * dr(g), 1.25 * dr(g)));
 		    angle += da;
 		}
 	}
-	else if  (q == 1) {
+	else if (strcmp(argv[1], "Random")==0) {
+
 		for (size_t i = 0; i < ipcount; ++i) {
+
 			s.push(Point(0.5 * (dist(g) % 10) + 1, dr(g) * (window.getSize().x), dr(g) * (window.getSize().y), 1.25 * dr(g), 1.25 * dr(g)));
 		}
 	}
+	else if ((strcmp(argv[1], "Random")||(strcmp(argv[1], "Random")) != 0)) {
+
+		return 0;
+	}
+
 	s.init();
 	while (window.isOpen()){
 
