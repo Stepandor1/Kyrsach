@@ -21,6 +21,8 @@ public:
 	void update();
 	void init();
 	std::vector<sf::CircleShape> getCircles();
+	
+	
 protected:
 	real acceleration(const Point& p, const std::vector<Point>& pnts, bool xy);
 	std::vector<Point> points;
@@ -73,6 +75,24 @@ void System::update(){
 		next.ax = acceleration(i, points, 1);
 		next.ay = acceleration(i, points, 0);
 
+		// Проверяем, достигли ли объекты границ окна
+		if (next.x - next.mass < 0) {
+			next.x = next.mass;
+			next.vx = std::abs(next.vx);
+		}
+		if (next.x + next.mass > 800) {
+			next.x = 800 - next.mass;
+			next.vx = -std::abs(next.vx);
+		}
+		if (next.y - next.mass < 0) {
+			next.y = next.mass;
+			next.vy = std::abs(next.vy);
+		}
+		if (next.y + next.mass > 600) {
+			next.y = 600 - next.mass;
+			next.vy = -std::abs(next.vy);
+		}
+
 		next.vx += dt / 2.0 * (i.ax + next.ax);
 		next.vy += dt / 2.0 * (i.ay + next.ay);
 
@@ -81,16 +101,18 @@ void System::update(){
 	points = new_system;
 	++counter;
 }
-
+//круг
 std::vector<sf::CircleShape> System::getCircles(){
 	std::mt19937_64 c;
 	c.seed(6);
 	std::uniform_int_distribution<int> dist(0, 255);
 	std::vector<sf::CircleShape> circles;
 	for (const auto& i : points){
-		sf::CircleShape circle(i.mass * 3); //изменение размеров объектов
+		sf::CircleShape circle(i.mass * 2); //изменение размеров объектов
 		circle.setFillColor(sf::Color(dist(c), dist(c), dist(c)));
-		circle.setPosition(i.x - i.mass * 10, i.y - i.mass * 2); //центрирование объектов
+	
+		circle.setPosition(i.x - i.mass * 10, i.y - i.mass * 1); //центрирование объектов
+		//circle.setPosition(125 + i.x - i.mass * 10 - dist(c), 125 + i.y - i.mass * 2 - dist(c));
 		circles.push_back(circle);
 	}
 	return circles;
@@ -102,21 +124,27 @@ int main()
 	g.seed(6);
 	std::uniform_int_distribution<int> dist(0, 360);
 	std::uniform_real_distribution<real> dr(-1.0, 1.0);
+	size_t steps = 2500;
 
-	size_t steps = 1000;
 	System s(1.0 / 60.0 / steps / 0.1); //изменение tраектории объектов
 
 	size_t ipcount = 20;
 	double da = 2.0 * acos(-1.0) / ipcount;
-	double r = 150.0, angle = 0.0;
+	double r = 250.0, angle = 0.0;
 	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window"/*, sf::Style::Fullscreen*/);
 	window.setFramerateLimit(60);
-	for (size_t i = 0; i < ipcount; ++i){
-
-		s.push(Point(0.5 * (dist(g) % 3)+1, window.getSize().x / 2.0 + r * cos(angle) + dr(g), window.getSize().y / 2.0 + r * sin(angle) + dr(g), 1.25 * dr(g), 1.25 * dr(g)));
-		angle += da;
+	int q=0;
+	if (q == 0) {
+		for (size_t i = 0; i < ipcount; ++i) {
+			s.push(Point(0.5 * (dist(g) % 10)+1, window.getSize().x / 2.0 + r * cos(angle) + dr(g), window.getSize().y / 2.0 + r * sin(angle) + dr(g), 1.25 * dr(g), 1.25 * dr(g)));
+		    angle += da;
+		}
 	}
-
+	else if  (q == 1) {
+		for (size_t i = 0; i < ipcount; ++i) {
+			s.push(Point(0.5 * (dist(g) % 10) + 1, dr(g) * (window.getSize().x), dr(g) * (window.getSize().y), 1.25 * dr(g), 1.25 * dr(g)));
+		}
+	}
 	s.init();
 	while (window.isOpen()){
 
@@ -144,6 +172,5 @@ int main()
 
 		window.display();
 	}
-
 	return 0;
 }
