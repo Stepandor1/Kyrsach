@@ -151,7 +151,7 @@ int main(int argc, char* argv[])
 			s.push(Point(0.5 * (dist(g) % 10) + 1, dr(g) * (window.getSize().x), dr(g) * (window.getSize().y), 1.25 * dr(g), 1.25 * dr(g)));
 		}
 	}
-	else if ((strcmp(argv[1], "Random")||(strcmp(argv[1], "Random")) != 0)) {
+	else if ((strcmp(argv[1], "Random")||(strcmp(argv[1], "Circle")) != 0)) {
 
 		return 0;
 	}
