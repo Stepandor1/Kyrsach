@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
 	g.seed(6);
 	std::uniform_int_distribution<int> dist(0, 360);
 	std::uniform_real_distribution<real> dr(-1.0, 1.0);
-	size_t steps = 2500;
+	size_t steps = atoi(argv[3]);
 
 	System s(1.0 / 60.0 / steps / 0.1); //изменение tраектории объектов
 
@@ -149,7 +149,7 @@ int main(int argc, char* argv[])
 	int a = argv[2];
 	int b = argv[3];
 	int n = strlen(argv[2]);
-	int j = strlen(argv[2]);
+	int j = strlen(argv[3]);
 
 	if (strcmp(argv[1], "help") == 0){
 
