@@ -121,11 +121,46 @@ std::vector<sf::CircleShape> System::getCircles() {
 	}
 	return circles;
 }
+void checkInput(int argc, char* argv[]) {
+	int a = std::atoi(argv[2]);
+	int b = std::atoi(argv[3]);
+	int n = strlen(argv[2]);
+	int j = strlen(argv[3]);
+
+	for (int t = 0; t < n; t++) {
+		if (!(argv[2][t] >= '0' && argv[2][t] <= '9')) {
+			std::cout << "second number input !!!error!!!\n";
+			return;
+		}
+	}
+	for (int t = 0; t < j; t++) {
+		if (!(argv[3][t] >= '0' && argv[3][t] <= '9')) {
+			std::cout << "third number input !!!error!!!\n";
+			return;
+		}
+	}
+	if (argc > 4) {
+		std::cout << "!!!error!!! more than two values entered\n";
+		return;
+	}
+}
 
 int main(int argc, char* argv[])
 {
-	if (argc == 1)
-	{
+	if (argc == 1){
+
+		std::cout << "use help as argument value\n";
+		return 0;
+	}
+
+	if (strcmp(argv[1], "help") == 0){
+
+		std::cout << "use Random or Circle and number of objects and steps variable(1000-3000)\n";
+		return 0;
+	}
+
+	if (argc != 4){
+
 		std::cout << "use help as argument value\n";
 		return 0;
 	}
@@ -144,19 +179,8 @@ int main(int argc, char* argv[])
 
 	sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window"/*, sf::Style::Fullscreen*/);
 	window.setFramerateLimit(60);
-	//-------------------------------------
-	//исправление ошибок
-	int a = argv[2];
-	int b = argv[3];
-	int n = strlen(argv[2]);
-	int j = strlen(argv[3]);
 
-	if (strcmp(argv[1], "help") == 0){
-
-		std::cout << "use Random or Circle and number of objects and steps variable\n";
-		return 0;
-	}
-	else if (strcmp(argv[1], "Circle") == 0) {
+	if (strcmp(argv[1], "Circle") == 0) {
 
 		for (size_t i = 0; i < ipcount; ++i) {
 
@@ -171,32 +195,13 @@ int main(int argc, char* argv[])
 			s.push(Point(0.5 * (dist(g) % 10) + 1, dr(g) * (window.getSize().x), dr(g) * (window.getSize().y), 1.25 * dr(g), 1.25 * dr(g)));
 		}
 	}
-	else{
+	else {
 
 		return 0;
 	}
-	for (int t = 0; t < n; t++) {
 
-		if (!(argv[2][t] >= '0' && argv[2][t] <= '9')) {
+	checkInput(argc, argv);
 
-			std::cout<<"second number input !!!error!!!\n";
-			return 0;
-		}
-	}
-	for (int t = 0; t < j; t++) {
-
-		if (!(argv[3][t] >= '0' && argv[3][t] <= '9')) {
-
-			std::cout << "third number input !!!error!!!\n";
-			return 0;
-		}
-	}
-	if (argv[4] != 0) {
-
-		std::cout << "!!!error!!! more than two values entered\n";
-		return 0;
-	}
-	//---------------------------------------
 	s.init();
 	while (window.isOpen()) {
 
